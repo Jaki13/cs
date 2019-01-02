@@ -6,8 +6,20 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
+
+    //Delegate
+    public delegate void InvalidRadiusEventHandler(Object sender, InvalidEigenschaftEventArgs e);
+
     public class Circle :GeometricObject, IDisposable
     {
+        //Ereignis
+        public event InvalidRadiusEventHandler InvalidRadius;
+        protected void OnInvalidRadius(InvalidEigenschaftEventArgs e)
+        {
+            if (InvalidRadius != null)
+                InvalidRadius(this, e);
+        }
+
         private bool disposed;
         protected static int _CountCircles;
         protected double _Radius;
@@ -24,8 +36,13 @@ namespace GeometricObjects
 
         public Circle(double radius, int xPos, int yPos) : this(radius)
         {
-            XCoordinate = xPos;
-            YCoordinate = yPos;
+            _Center.X = xPos;
+            _Center.Y = yPos;
+        }
+
+        public Circle(double radius, Point center) : this(radius)
+        {
+            _Center = center;
         }
 
         public static int CountCircles { get => _CountCircles; }
@@ -38,7 +55,10 @@ namespace GeometricObjects
                 if (value >= 0)
                     _Radius = value;
                 else
-                    Console.WriteLine("Radius kan nicht negativ sein");
+                    //Ereignis auslösen
+                    if(InvalidRadius != null)
+                        InvalidRadius(this, new InvalidEigenschaftEventArgs(value));
+                    //Console.WriteLine("Radius kan nicht negativ sein");
             }
         }
 
@@ -76,7 +96,7 @@ namespace GeometricObjects
         {
             return "Circle, R: " + Radius + ", Fläche: " + GetArea();
         }
-
+        
         public void Dispose()
         {
             if (!disposed)

@@ -6,8 +6,28 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
+    //Delegate
+    public delegate void InvalidBeiteEventHandler(Object sender, InvalidEigenschaftEventArgs e);
+    public delegate void InvalidLängeEventHandler(Object sender, InvalidEigenschaftEventArgs e);
+
     class Rectangle :GeometricObject, IDisposable
     {
+        //Ereignis
+        public event InvalidRadiusEventHandler InvalidBreite;
+        public event InvalidRadiusEventHandler InvalidLänge;
+
+        protected void OnInvalidBreite(InvalidEigenschaftEventArgs e)
+        {
+            if (InvalidBreite != null)
+                InvalidBreite(this, e);
+        }
+
+        protected void OnInvalidLänge(InvalidEigenschaftEventArgs e)
+        {
+            if (InvalidLänge != null)
+                InvalidLänge(this, e);
+        }
+
         private bool disposed;
         protected static int _CountRectangles;
         protected double _Breite;
@@ -26,8 +46,13 @@ namespace GeometricObjects
 
         public Rectangle(double breite, double länge, int xPos, int yPos) : this(breite, länge)
         {
-            XCoordinate = xPos;
-            YCoordinate = yPos;
+            _Center.X = xPos;
+            _Center.Y = yPos;
+        }
+
+        public Rectangle(double breite, double länge, Point center) : this(breite, länge)
+        {
+            _Center = center;
         }
 
         public static int CountRectangles { get => _CountRectangles; }
@@ -39,7 +64,10 @@ namespace GeometricObjects
                 if (value >= 0)
                     _Breite = value;
                 else
-                    Console.WriteLine("Breite kan nicht negativ sein");
+                   //Ereignis auslösen
+                   if (InvalidBreite != null)
+                        InvalidBreite(this, new InvalidEigenschaftEventArgs(value));
+                    //Console.WriteLine("Radius kan nicht negativ sein");
             }
         }
 
@@ -51,7 +79,10 @@ namespace GeometricObjects
                 if (value >= 0)
                     _Länge = value;
                 else
-                    Console.WriteLine("Länge kan nicht negativ sein");
+                   //Ereignis auslösen
+                   if (InvalidLänge != null)
+                        InvalidLänge(this, new InvalidEigenschaftEventArgs(value));
+                    //Console.WriteLine("Radius kan nicht negativ sein");
             }
         }
 
@@ -88,7 +119,7 @@ namespace GeometricObjects
 
         public override string ToString()
         {
-            return "Rectangle, B: " + Breite + ", H: " + Länge + ", Fläche: " + GetArea();
+            return "Rectangle, B: " + Breite + ", L: " + Länge + ", Fläche: " + GetArea();
         }
 
         public void Dispose()

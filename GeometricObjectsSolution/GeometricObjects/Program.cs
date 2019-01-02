@@ -7,39 +7,57 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
-    //class Program
-    //{
-    //    static void Main(string[] args)
-    //    {
-    //        GraphicCircle gc = new GraphicCircle();
-    //        Console.WriteLine("Anzahl der Kreis Objekte {0}.", GraphicCircle.CountCircles);
-
-    //        Console.Read();
-
-
-    //    }
-    //}
     class Program
     {
         static void Main(string[] args)
         {
-            GeometricObject[] arr = new GeometricObject[5];
-            arr[0] = new Circle(34);
-            arr[1] = new Rectangle(10, 230);
-            arr[2] = new GraphicCircle(37);
-            arr[3] = new Circle(20);
-            arr[4] = new GraphicRectangle(12, 70);
-            Array.Sort(arr, new CompareClass());
-            foreach (GeometricObject item in arr)
-                Console.WriteLine(item.ToString());
+            Circle kreis = new Circle();
+            kreis.InvalidRadius += kreis_InvalidRadius;
+            kreis.Radius = -10;
+            kreis.MoveXY(new Point(3, 4));
+            Console.WriteLine(kreis.ToString());
+
+            GraphicCircle kreisgr = new GraphicCircle();
+            kreisgr.InvalidRadius += kreis_InvalidRadius;
+            kreisgr.Radius = -13;
+            Console.WriteLine(kreisgr.ToString());
+
+            Rectangle rec = new Rectangle();
+            rec.InvalidBreite += Rec_InvalidBreite;
+            rec.InvalidLänge += Rec_InvalidLänge;
+            rec.Breite = -3;
+            rec.Länge = -1;
+            Console.WriteLine(rec.ToString());
+
+            GraphicRectangle recgr = new GraphicRectangle();
+            recgr.InvalidBreite += Rec_InvalidBreite;
+            recgr.InvalidLänge += Rec_InvalidLänge;
+            recgr.Breite = -3;
+            recgr.Länge = -1;
+            Console.WriteLine(recgr.ToString());
+
             Console.ReadLine();
         }
-    }
-    class CompareClass : IComparer
-    {
-        public int Compare(object x, object y)
+
+        private static void Rec_InvalidBreite(object sender, InvalidEigenschaftEventArgs e)
         {
-            return ((GeometricObject)x).Bigger((GeometricObject)y);
+            Console.WriteLine("Eine Breite von {0} ist nicht zulässig.", e.Eigenschaft);
+            Console.Write("Neueingabe: ");
+            ((Rectangle)sender).Breite = Convert.ToDouble(Console.ReadLine());
+        }
+
+        private static void Rec_InvalidLänge(object sender, InvalidEigenschaftEventArgs e)
+        {
+            Console.WriteLine("Eine Länge von {0} ist nicht zulässig.", e.Eigenschaft);
+            Console.Write("Neueingabe: ");
+            ((Rectangle)sender).Länge = Convert.ToDouble(Console.ReadLine());
+        }
+
+        public static void kreis_InvalidRadius(object sender, InvalidEigenschaftEventArgs e)
+        {
+            Console.WriteLine("Ein Radius von {0} ist nicht zulässig.", e.Eigenschaft);
+            Console.Write("Neueingabe: ");
+            ((Circle)sender).Radius = Convert.ToDouble(Console.ReadLine());
         }
     }
 }

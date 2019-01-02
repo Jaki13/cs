@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
-    class Rectangle :GeometricObject :IDisposable
+    class Rectangle :GeometricObject, IDisposable
     {
         private bool disposed;
         protected static int _CountRectangles;

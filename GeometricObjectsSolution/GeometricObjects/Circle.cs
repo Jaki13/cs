@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
-    public class Circle :GeometricObject :IDisposable
+    public class Circle :GeometricObject, IDisposable
     {
         private bool disposed;
         protected static int _CountCircles;

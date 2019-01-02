@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,30 +7,39 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
+    //class Program
+    //{
+    //    static void Main(string[] args)
+    //    {
+    //        GraphicCircle gc = new GraphicCircle();
+    //        Console.WriteLine("Anzahl der Kreis Objekte {0}.", GraphicCircle.CountCircles);
+
+    //        Console.Read();
+
+
+    //    }
+    //}
     class Program
     {
         static void Main(string[] args)
         {
-            Circle kreis = new Circle { Radius = 10, XCoordinate = -23, YCoordinate = 14};
-            kreis.Radius = 11;
-            Console.WriteLine("Der Keisradius beträgt {0} Einheiten.", kreis.Radius);
-
-            double area = kreis.GetArea();
-            Console.WriteLine("Der Flächeninhalt beträgt {0} Einheiten^2", area);
-
-            Console.WriteLine("Der Umfang beträgt {0} Einheiten", kreis.GetCircumference());
-
-            kreis.MoveXY(51, -15);
-
-            Console.WriteLine("X = {0}\nY = {1}", kreis.XCoordinate, kreis.YCoordinate);
-
-            Circle kreis2 = new Circle { Radius = 7, XCoordinate = 1, YCoordinate = 0 };
-
-            Console.WriteLine("Kreis größer als Kreis2? : " + kreis.Bigger(kreis2));
-
-            Console.Read();
-
-           
+            GeometricObject[] arr = new GeometricObject[5];
+            arr[0] = new Circle(34);
+            arr[1] = new Rectangle(10, 230);
+            arr[2] = new GraphicCircle(37);
+            arr[3] = new Circle(20);
+            arr[4] = new GraphicRectangle(12, 70);
+            Array.Sort(arr, new CompareClass());
+            foreach (GeometricObject item in arr)
+                Console.WriteLine(item.ToString());
+            Console.ReadLine();
+        }
+    }
+    class CompareClass : IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            return ((GeometricObject)x).Bigger((GeometricObject)y);
         }
     }
 }

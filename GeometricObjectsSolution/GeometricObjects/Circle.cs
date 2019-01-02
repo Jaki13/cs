@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace GeometricObjects
 {
-    public class Circle
+    public class Circle :GeometricObject :IDisposable
     {
-        private static int _CountCircles;
-        private int _XCoordinate { get; set; }
-        private int _YCoordinate { get; set; }
-        private double _Radius;
+        private bool disposed;
+        protected static int _CountCircles;
+        protected double _Radius;
 
         public Circle()
         {
@@ -30,7 +29,8 @@ namespace GeometricObjects
         }
 
         public static int CountCircles { get => _CountCircles; }
-        public double Radius
+
+        public virtual double Radius
         {
             get => _Radius;
             set
@@ -43,7 +43,7 @@ namespace GeometricObjects
         }
 
         //Methoden
-        public double GetArea()
+        public override double GetArea()
         {
             double area = 3.14 * Math.Pow(Radius, 2);
             return area;
@@ -54,7 +54,7 @@ namespace GeometricObjects
             return Math.PI * Math.Pow(radius, 2);
         }
 
-        public double GetCircumference()
+        public override double GetCircumference()
         {
             double circumference = 2 * Radius * 3.14;
             return circumference;
@@ -65,38 +65,30 @@ namespace GeometricObjects
             return 2 * radius * Math.PI;
         }
 
-        public void MoveXY(int dx, int dy)
-        {
-            XCoordinate += dx;
-            YCoordinate += dy;
-        }
-
-        public void MoveXY(int dx, int dy, int r)
+        public virtual void MoveXY(int dx, int dy, int r)
         {
             XCoordinate += dx;
             YCoordinate += dy;
             Radius += r;
         }
 
-
-        public int Bigger(Circle kreis)
+        public override string ToString()
         {
-            if (Radius > kreis.Radius)
-                return 1;
-            else if (Radius == kreis.Radius)
-                return 0;
-            else
-                return -1;
+            return "Circle, R: " + Radius + ", Fläche: " + GetArea();
         }
 
-        public static int Bigger(Circle kreis1, Circle kreis2)
+        public void Dispose()
         {
-            if (kreis1.Radius > kreis2.Radius)
-                return 1;
-            else if (kreis1.Radius == kreis2.Radius)
-                return 0;
-            else
-                return -1;
+            if (!disposed)
+            {
+                _CountCircles--;
+                GC.SuppressFinalize(this);
+                disposed = true;
+            }
+        }
+        ~Circle()
+        {
+            Dispose();
         }
     }
 }
